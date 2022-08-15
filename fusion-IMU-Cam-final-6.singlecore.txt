@@ -1,0 +1,14 @@
+#include "esp32-cam-webserver.h"
+#include "readingIMUdata.h"
+
+void setup() {
+  
+    setupCamWebserver();
+    setupReadingIMUdata();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+    loopCamWebserver();
+    loopReadingIMUdata();
+}
