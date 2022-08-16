@@ -18,8 +18,8 @@ Adafruit_Sensor *accelerometer, *gyroscope, *magnetometer;
 #include "NXP_FXOS_FXAS.h"  // NXP 9-DoF breakout
 
 // pick your filter! slower == better quality output
-//Adafruit_NXPSensorFusion filter; // slowest
-Adafruit_Madgwick filter;  // faster than NXP
+Adafruit_NXPSensorFusion filter; // slowest
+//Adafruit_Madgwick filter;  // faster than NXP
 //Adafruit_Mahony filter;  // fastest/smalleset
 
 #if defined(ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM)
@@ -72,8 +72,8 @@ void setupReadingIMUdata() {
 }
 
 
-void loopReadingIMUdata() {
-  float roll, pitch, heading; //roll, pitch, yaw
+void loopReadingIMUdata(float* heading, float* pitch,  float* roll) {
+  //float roll, pitch, heading; //roll, pitch, yaw
   float gx, gy, gz;
   static uint8_t counter = 0;
 
@@ -117,43 +117,44 @@ void loopReadingIMUdata() {
   counter = 0;
 
 
-  Serial.print("Raw a,g,m xyz: ");
-  Serial.print(accel.acceleration.x, 4); Serial.print(", "); //acceleration is measured in m/s^2
-  Serial.print(accel.acceleration.y, 4); Serial.print(", ");
-  Serial.print(accel.acceleration.z, 4); Serial.print(", ");
-  Serial.print(gx, 4); Serial.print(", "); //degrees per second
-  Serial.print(gy, 4); Serial.print(", ");
-  Serial.print(gz, 4); Serial.print(", ");
-  Serial.print(mag.magnetic.x, 4); Serial.print(", "); //mag data is in uTesla
-  Serial.print(mag.magnetic.y, 4); Serial.print(", ");
-  Serial.print(mag.magnetic.z, 4); Serial.println("");
+  // Serial.print("Raw a,g,m xyz: ");
+  // Serial.print(accel.acceleration.x, 4); Serial.print(", "); //acceleration is measured in m/s^2
+  // Serial.print(accel.acceleration.y, 4); Serial.print(", ");
+  // Serial.print(accel.acceleration.z, 4); Serial.print(", ");
+  // Serial.print(gx, 4); Serial.print(", "); //degrees per second
+  // Serial.print(gy, 4); Serial.print(", ");
+  // Serial.print(gz, 4); Serial.print(", ");
+  // Serial.print(mag.magnetic.x, 4); Serial.print(", "); //mag data is in uTesla
+  // Serial.print(mag.magnetic.y, 4); Serial.print(", ");
+  // Serial.print(mag.magnetic.z, 4); Serial.println("");
 
 
   // print the heading, pitch and roll
-  roll = filter.getRoll();
-  pitch = filter.getPitch();
-  heading = filter.getYaw();
-  Serial.print("Orientation: ");
-  Serial.print(heading);
-  Serial.print(", ");
-  Serial.print(pitch);
-  Serial.print(", ");
-  Serial.println(roll);
+  *roll = filter.getRoll();
+  *pitch = filter.getPitch();
+  *heading = filter.getYaw();
+  // Serial.print("Orientation: ");
+  // Serial.print(heading);
+  // Serial.print(", ");
+  // Serial.print(pitch);
+  // Serial.print(", ");
+  // Serial.println(roll);
 
   float qw, qx, qy, qz;
   filter.getQuaternion(&qw, &qx, &qy, &qz);
-  Serial.print("Quaternion: ");
-  Serial.print(qw, 4);
-  Serial.print(", ");
-  Serial.print(qx, 4);
-  Serial.print(", ");
-  Serial.print(qy, 4);
-  Serial.print(", ");
-  Serial.println(qz, 4);
+  // Serial.print("Quaternion: ");
+  // Serial.print(qw, 4);
+  // Serial.print(", ");
+  // Serial.print(qx, 4);
+  // Serial.print(", ");
+  // Serial.print(qy, 4);
+  // Serial.print(", ");
+  // Serial.println(qz, 4);
 
-  Serial.println();
+  //Serial.println();
   
-#if defined(AHRS_DEBUG_OUTPUT)
-  Serial.print("Took "); Serial.print(millis()-timestamp); Serial.println(" ms");
-#endif
+  #if defined(AHRS_DEBUG_OUTPUT)
+    Serial.print("Took "); Serial.print(millis()-timestamp); Serial.println(" ms");
+  #endif
+
 }

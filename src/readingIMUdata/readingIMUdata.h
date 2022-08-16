@@ -1,2 +1,2 @@
 void setupReadingIMUdata();
-void loopReadingIMUdata();
+void loopReadingIMUdata(float* roll, float* pitch, float* heading);
